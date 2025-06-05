@@ -1,0 +1,18 @@
+[
+    {
+        "epoch": 300,
+        "lr": 0.01,
+        "hidden_channels": 128,
+        "num_classes": 6,
+        "min_values": [-9999,0 ,1 ,2 , 3, 4],
+        "max_values": [0, 1, 2, 3, 4, -9999],
+        "factor": 5,
+        "node_file": "../tetra_output_files/0415_GZ(20×20×10)/combined_mesh.node",
+        "ele_file": "../tetra_output_files/0415_GZ(20×20×10)/combined_mesh.ele",
+        "vtk_file": "../tetra_output_files/0415_GZ(20×20×10)/Fault",
+        "dropout": 0,
+        "is_gradient": false,
+        "lr_decay":0.8,
+        "result_dir": "0"
+    }
+]
