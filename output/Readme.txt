@@ -1,18 +1,19 @@
-computer_normal_from_orint：通过产状计算法向量
-confusion_matrix_extract：从岩性训练日志中提取格式化的混淆矩阵
-cross_section：生成合成数据的剖面图
-dip_strike_to_vector：将倾角(dip)和走向(strike)转换为断层的延伸方向向量，并设置指定的模长
-plot_ confusion_matrix：官庄数据混淆矩阵生成。输入提取的混淆矩阵数据，输出保存图片
-plot_ confusion_matrix_synth_data：合成数据混淆矩阵生成。
-plot_LCR_hist：绘制岩性重合率直方图
-plot_lihto_loss：绘制LithoGNN 损失曲线
-plot_litho_accuracy：绘制LithoGNNaccuracy
-plot_litho_lr:绘制LithoGNN lr
-plot_litho_train_2_metric_multimodel:绘制LithoGNN loss 和准确率到1*2的图中
-plot_litho_train_metric_multimodel：绘制LithoGNN的loss、lr、accuracy和混淆矩阵到2*2的图中
-plot_scalar_loss：绘制ScalarGNN的损失函数
-plot_scalar_lr：绘制ScalarGNN的学习率
-plot_scalar_r2：绘制ScalarGNN的r2
-plot_scalar_RMSE：绘制ScalarGNN的RMSE
-plot_scalar_train_metric_multimodel：绘制ScalarGNN的损失函数、学习率、r2、RMSE到2*2的图中
-save_data：保存预测的图数据为csv的函数
+computer_normal_from_orint：Calculate the direction vector using the orientation method
+confusion_matrix_extract：Extracting formatted confusion matrices from lithological training logs
+cross_section：Generate synthetic data cross-section diagrams
+dip_strike_to_vector：Convert the dip and strike into the extension direction vector of the fault, and set the specified modulus length.
+plot_ confusion_matrix：Data confusion matrix generation. Input extracted confusion matrix data; output saved images.
+plot_ confusion_matrix_synth_data：Generation of synthetic data obfuscation matrices.
+plot_LCR_hist：Plotting a lithological overlap rate histogram.
+plot_lihto_loss：Plotting the LithoGNN Loss Curve
+plot_litho_accuracy：Plotting LithoGNN Accuracy
+plot_litho_lr:Drawing LithoGNN lr
+plot_litho_train_2_metric_multimodel:Plot the LithoGNN loss and accuracy on a 1×2 grid
+plot_litho_train_metric_multimodel：Plot the loss, learning rate, accuracy, and confusion matrix of LithoGNN onto a 2×2 graph.
+plot_scalar_loss：Plotting the Loss Function for ScalarGNN
+plot_scalar_lr：Plotting the learning rate for ScalarGNN
+plot_scalar_r2：Plotting the R-squared value for the Scalar Graph Neural Network
+plot_scalar_RMSE：Plotting the RMSE of ScalarGNN
+plot_scalar_train_metric_multimodel：Plot the loss function, learning rate, r², and RMSE of the ScalarGNN onto a 2×2 grid.
+save_data：Function to save predicted graph data as CSV
+
