@@ -8,9 +8,7 @@ from tkinter import ttk
 
 
 def load_and_delaunay(csv_file, x_col, y_col, z_col, value_col):
-    """
-    从不规则点云生成四面体网格，并插入属性值
-    """
+    """Generate a tetrahedral mesh from an irregular point cloud and insert attribute values"""
     df = pd.read_csv(csv_file)
     points = df[[x_col, y_col, z_col]].values
     values = df[value_col].values
@@ -18,31 +16,23 @@ def load_and_delaunay(csv_file, x_col, y_col, z_col, value_col):
     pdata = pv.PolyData(points)
     pdata.point_data[value_col] = values
 
-    # 使用 Delaunay 3D 生成三维四面体剖分
+    # Generating a three-dimensional tetrahedral mesh using Delaunay triangulation
     tetra = pdata.delaunay_3d()
     return tetra
 
 
 def extract_and_save_isosurfaces(mesh, value_col, isovalues, output_dir, visualize=False, progress_var=None,
                                  smoothing_iterations=100, smoothing_relaxation=0.2):
-    """
-    提取并保存等值面，添加平滑处理
-
-    参数:
-    - smoothing_iterations: 平滑迭代次数
-    - smoothing_relaxation: 平滑松弛因子 (0-1之间)
-    """
+    """ Extract and save isosurfaces, add smoothing processing """
     os.makedirs(output_dir, exist_ok=True)
     plotter = pv.Plotter()
 
     total = len(isovalues)
     for i, val in enumerate(isovalues):
-        print(f"⛏️ 正在提取等值面: {val}")
-
-        # 提取等值面
+        # Extract equipotential surfaces
         surf = mesh.contour(isosurfaces=[val], scalars=value_col)
 
-        # 应用平滑处理
+        # Application smoothing
         surf_smoothed = surf.smooth(n_iter=smoothing_iterations, relaxation_factor=smoothing_relaxation)
 
         if visualize:
@@ -50,9 +40,8 @@ def extract_and_save_isosurfaces(mesh, value_col, isovalues, output_dir, visuali
 
         out_path = os.path.join(output_dir, f"isosurface_{val}.stl")
         surf_smoothed.save(out_path)
-        print(f"✅ 已保存: {out_path}")
 
-        # 更新进度条
+        # Update progress bar
         if progress_var:
             progress_var.set((i + 1) / total * 100)
 
@@ -63,12 +52,12 @@ def extract_and_save_isosurfaces(mesh, value_col, isovalues, output_dir, visuali
 
 def run_gui():
     root = tk.Tk()
-    root.title("不规则点云等值面提取")
+    root.title("Irregular Point Cloud Isosurface Extraction")
     root.geometry("600x550")
     state = {}
 
     def choose_file():
-        path = filedialog.askopenfilename(filetypes=[("CSV 文件", "*.csv")])
+        path = filedialog.askopenfilename(filetypes=[("CSV File", "*.csv")])
         file_entry.delete(0, tk.END)
         file_entry.insert(0, path)
         state['csv_path'] = path
@@ -81,7 +70,7 @@ def run_gui():
                 for var, menu in [(x_var, x_menu), (y_var, y_menu), (z_var, z_menu), (val_var, val_menu)]:
                     menu['menu'].add_command(label=col, command=tk._setit(var, col))
         except Exception as e:
-            messagebox.showerror("读取失败", str(e))
+            messagebox.showerror("Failed to read", str(e))
 
     def run_process():
         try:
@@ -91,9 +80,9 @@ def run_gui():
             z_col = z_var.get()
             value_col = val_var.get()
             isovalues = [float(v.strip()) for v in iso_entry.get().split(",")]
-            output_dir = filedialog.askdirectory(title="选择输出目录")
+            output_dir = filedialog.askdirectory(title="Select output directory")
 
-            # 获取平滑参数
+            # Obtain smoothing parameters
             smoothing_iterations = int(smooth_iter_entry.get())
             smoothing_relaxation = float(smooth_relax_entry.get())
 
@@ -106,24 +95,24 @@ def run_gui():
                 smoothing_relaxation=smoothing_relaxation
             )
 
-            messagebox.showinfo("完成", f"等值面已保存至：{output_dir}")
+            messagebox.showinfo("Completed", f"The contour surfaces have been saved to: {output_dir}")
         except Exception as e:
-            messagebox.showerror("出错了", str(e))
+            messagebox.showerror("An error has occurred", str(e))
 
-    # 创建基本UI框架
-    input_frame = ttk.LabelFrame(root, text="数据输入")
+    # Establish the fundamental UI framework
+    input_frame = ttk.LabelFrame(root, text="Data entry")
     input_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
-    ttk.Label(input_frame, text="CSV文件路径：").pack(anchor="w", padx=5, pady=2)
+    ttk.Label(input_frame, text="CSV File path：").pack(anchor="w", padx=5, pady=2)
     file_entry = ttk.Entry(input_frame, width=60)
     file_entry.pack(padx=5, pady=2, fill="x")
-    ttk.Button(input_frame, text="浏览", command=choose_file).pack(padx=5, pady=2)
+    ttk.Button(input_frame, text="Browse", command=choose_file).pack(padx=5, pady=2)
 
-    # 创建列选择框架
+    # Create Column Selection Framework
     columns_frame = ttk.Frame(input_frame)
     columns_frame.pack(fill="x", padx=5, pady=5)
 
-    column_labels = ["X列名", "Y列名", "Z列名", "属性列名"]
+    column_labels = ["X", "Y", "Z", "Attribute"]
     var_names = ['x', 'y', 'z', 'val']
 
     for i, (label, varname) in enumerate(zip(column_labels, var_names)):
@@ -137,43 +126,43 @@ def run_gui():
     x_var, y_var, z_var, val_var = state['x_var'], state['y_var'], state['z_var'], state['val_var']
     x_menu, y_menu, z_menu, val_menu = state['x_menu'], state['y_menu'], state['z_menu'], state['val_menu']
 
-    # 创建参数设置框架
-    param_frame = ttk.LabelFrame(root, text="等值面参数")
+    # Establish a parameter configuration framework
+    param_frame = ttk.LabelFrame(root, text="Equivalence surface parameters")
     param_frame.pack(fill="both", expand=True, padx=10, pady=5)
 
-    ttk.Label(param_frame, text="等值面值（逗号分隔）").pack(anchor="w", padx=5, pady=2)
+    ttk.Label(param_frame, text="Equivalent face value").pack(anchor="w", padx=5, pady=2)
     iso_entry = ttk.Entry(param_frame)
     iso_entry.insert(0, "20, 30, 50")
     iso_entry.pack(padx=5, pady=2, fill="x")
 
-    # 添加平滑参数
+    # Add smoothing parameters
     smooth_frame = ttk.Frame(param_frame)
     smooth_frame.pack(fill="x", padx=5, pady=5)
 
-    ttk.Label(smooth_frame, text="平滑迭代次数:").grid(row=0, column=0, padx=5, pady=2, sticky="w")
+    ttk.Label(smooth_frame, text="Smooth iteration count:").grid(row=0, column=0, padx=5, pady=2, sticky="w")
     smooth_iter_entry = ttk.Entry(smooth_frame, width=10)
     smooth_iter_entry.insert(0, "100")
     smooth_iter_entry.grid(row=0, column=1, padx=5, pady=2)
 
-    ttk.Label(smooth_frame, text="平滑松弛因子(0-1):").grid(row=1, column=0, padx=5, pady=2, sticky="w")
+    ttk.Label(smooth_frame, text="Smoothing and Relaxing Factor(0-1):").grid(row=1, column=0, padx=5, pady=2, sticky="w")
     smooth_relax_entry = ttk.Entry(smooth_frame, width=10)
     smooth_relax_entry.insert(0, "0.2")
     smooth_relax_entry.grid(row=1, column=1, padx=5, pady=2)
 
-    # 添加帮助提示
-    ttk.Label(param_frame, text="提示: 平滑迭代次数越高、松弛因子越大，等值面越平滑，但计算时间会更长").pack(anchor="w",
+    # Add help prompts
+    ttk.Label(param_frame, text="Note: Higher smoothing iteration counts and larger relaxation factors result in smoother isosurfaces, but at the cost of increased computational time").pack(anchor="w",
                                                                                                           padx=5,
                                                                                                           pady=2)
 
-    # 执行按钮
-    ttk.Button(root, text="提取等值面并保存", command=run_process, style="Accent.TButton").pack(pady=10)
+    # Execute button
+    ttk.Button(root, text="Extract and save the isosurface", command=run_process, style="Accent.TButton").pack(pady=10)
 
-    # 创建进度条
+    # Create progress bar
     progress_var = tk.DoubleVar()
     progress_bar = ttk.Progressbar(root, variable=progress_var, maximum=100)
     progress_bar.pack(fill='x', padx=10, pady=10)
 
-    # 设置样式
+    # Set Style
     style = ttk.Style()
     style.configure("Accent.TButton", font=("Arial", 10, "bold"))
 
