@@ -8,7 +8,6 @@ import platform
 import os
 from scipy import ndimage
 
-# 检查是否有可用的GPU
 device = select_device(desired_gpu=0)
 
 
@@ -31,10 +30,9 @@ def create_fault_surface1(level, fault_df, global_bounds, visualize=False, outpu
     """
     # Extract points for the current level
     points = fault_df[fault_df['Level'] == level][['X', 'Y', 'Z']].values
-    print(f"Level {level} 有 {len(points)} 个点。")
 
     if len(points) < 4:
-        raise ValueError(f"Level {level} 的点数不足以生成断层面。")
+        raise ValueError(f"Level {level} ")
 
     # Create a PyVista point cloud
     point_cloud = pv.PolyData(points)
@@ -72,7 +70,6 @@ def create_fault_surface1(level, fault_df, global_bounds, visualize=False, outpu
     # Extract isosurface
     contour_value = level-0.5   # Adjust threshold as needed
     surface = grid.contour(isosurfaces=[contour_value], scalars="LevelScalar")
-    print(f"断层面 Level {level} 的等值面已提取。")
 
     # Visualization
     if visualize:
@@ -92,9 +89,8 @@ def create_fault_surface1(level, fault_df, global_bounds, visualize=False, outpu
                 plotter.show(auto_close=False)
                 plotter.screenshot(screenshot_path)
                 plotter.close()
-                print(f"已保存断层面 Level {level} 的可视化图像到 '{screenshot_path}'。")
         except Exception as e:
-            print(f"断层面 Level {level} 的可视化失败: {e}")
+            print(f" Level {level} ")
     # Ensure normal vectors are consistent (pointing towards upper plate)
     surface.compute_normals(inplace=True, consistent_normals=True, split_vertices=True)
 
@@ -102,14 +98,14 @@ def create_fault_surface1(level, fault_df, global_bounds, visualize=False, outpu
 
 def create_bounding_box1(coords, buffer=1.0):
     """
-    创建一个包围所有节点的边界盒子。
+    Create a bounding box encompassing all nodes.
 
     Parameters:
-    - coords (numpy.ndarray): 节点坐标，形状为 (M, 3)。
-    - buffer (float): 在边界盒子每个方向上添加的缓冲区大小。
+    - coords (numpy.ndarray): Node coordinates (M, 3).
+    - buffer (float): The buffer size added to each side of the bounding box.
 
     Returns:
-    - bounding_box (tuple): 包围所有节点的边界盒子，格式为 (x_min, x_max, y_min, y_max, z_min, z_max)。
+    - bounding_box (tuple): Bounding boxes encompassing all nodes, formatted as(x_min, x_max, y_min, y_max, z_min, z_max)
     """
     x_min, y_min, z_min = coords.min(axis=0) - buffer
     x_max, y_max, z_max = coords.max(axis=0) + buffer
