@@ -1,3 +1,4 @@
-具体搭建流程参照：
+For the specific setup procedure, please refer to:
 https://csugeo3d-ai.feishu.cn/docx/RmyMdWxJ3opEKQxn9qLc6Rounpe
-Docker下的PyG环境配置
+
+Configuring the PyG Environment in Docker
