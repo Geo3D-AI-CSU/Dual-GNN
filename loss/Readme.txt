@@ -1,2 +1,3 @@
-loss_fn：损失函数
-GradNorm：自适应权重调整策略
+loss_fn：Loss function
+GradNorm：Adaptive Weight Adjustment Strategy
+
